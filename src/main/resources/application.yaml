@@ -1,0 +1,18 @@
+spring:
+  application.name: Event Manager
+  datasource:
+    url: jdbc:postgresql://localhost:5432/event_manager_repository
+    username: itdev
+    password: finalproj
+  jpa:
+    properties:
+      hibernate:
+        current_session_context_class: thread
+    open-in-view: false
+
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: 476927973909-0b8db6qlt0ncr126j6ig8q8tmnurh2ue.apps.googleusercontent.com
+      client-secret: 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
+    oauth2-redirect-url: http://localhost:8080/swagger-ui/oauth2-redirect.html
