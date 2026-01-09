@@ -1,13 +1,13 @@
-package com.itdev.finaproject;
+package com.itdev.finalproject;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FinalProjectApplication {
+public class EventManagerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FinalProjectApplication.class, args);
+        SpringApplication.run(EventManagerApplication.class, args);
     }
 
 }
