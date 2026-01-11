@@ -1,13 +1,13 @@
 package com.itdev.finalproject.http.rest;
 
-import com.itdev.finalproject.dto.PageResponse;
 import com.itdev.finalproject.dto.createedit.LocationCreateEditDto;
 import com.itdev.finalproject.dto.read.LocationReadDto;
 import com.itdev.finalproject.service.LocationService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +30,9 @@ public class LocationController {
     }
 
     @GetMapping
-    public PageResponse<LocationReadDto> findAll(Pageable pageable) {
-        return PageResponse.of(locationService.findAll(pageable));
+    public ResponseEntity<Page<LocationReadDto>> findAll(Pageable pageable) {
+        Page<LocationReadDto> locations = locationService.findAll(pageable);
+        return locations.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(locations);
     }
 
     @GetMapping("/{id}")
@@ -46,7 +47,7 @@ public class LocationController {
     }
 
     @PutMapping("/{id}")
-    public LocationReadDto update(@PathVariable Long id, @Validated @RequestBody LocationCreateEditDto editDto) {
+    public LocationReadDto update(@PathVariable Long id, @Valid @RequestBody LocationCreateEditDto editDto) {
         return locationService.update(id, editDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
