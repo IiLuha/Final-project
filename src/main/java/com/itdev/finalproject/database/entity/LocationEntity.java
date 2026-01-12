@@ -5,10 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.Objects;
 
 @Entity
+@Table(name = "location")
 public class LocationEntity {
 
     @Id
@@ -25,23 +27,16 @@ public class LocationEntity {
     public LocationEntity() {
     }
 
-    public LocationEntity(Long id, String name, String address, Integer capacity) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.capacity = capacity;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        LocationEntity locationEntity = (LocationEntity) o;
-        return Objects.equals(name, locationEntity.name);
+        LocationEntity that = (LocationEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name);
+        return Objects.hash(id, name);
     }
 
     @Override

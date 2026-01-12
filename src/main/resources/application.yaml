@@ -11,3 +11,7 @@ spring:
         hbm2ddl:
           auto: update
     open-in-view: false
+
+jwt:
+  lifetime: 86400000
+  secret-key: B44NQVBBEKIAMBKFPQMLZG2FKXA2NY2ZUDOBE5LC5FYN5WZUYJEA

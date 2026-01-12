@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class LocationService {
 
     private final LocationRepository locationRepository;
@@ -36,6 +36,7 @@ public class LocationService {
                 .map(locationReadMapper::map);
     }
 
+    @Transactional
     public LocationReadDto create(LocationCreateEditDto createEditDto) {
         return Optional.of(createEditDto)
                 .map(locationCreateEditMapper::map)
@@ -44,6 +45,7 @@ public class LocationService {
                 .orElseThrow();
     }
 
+    @Transactional
     public Optional<LocationReadDto> update(Long id, LocationCreateEditDto createEditDto) {
         return locationRepository.findById(id)
                 .map(entity -> locationCreateEditMapper.map(createEditDto, entity))
@@ -51,6 +53,7 @@ public class LocationService {
                 .map(locationReadMapper::map);
     }
 
+    @Transactional
     public boolean delete(Long id) {
         return locationRepository.findById(id)
                 .map(entity -> {
