@@ -2,11 +2,11 @@ package com.itdev.finalproject.service;
 
 import com.itdev.finalproject.database.entity.Role;
 import com.itdev.finalproject.database.repository.UserRepository;
+import com.itdev.finalproject.dto.AuthenticatedUser;
 import com.itdev.finalproject.dto.createedit.UserCreateEditDto;
 import com.itdev.finalproject.dto.read.UserReadDto;
 import com.itdev.finalproject.mapper.createedit.UserCreateEditMapper;
 import com.itdev.finalproject.mapper.read.UserReadMapper;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,6 +44,10 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public UserReadDto create(UserCreateEditDto createEditDto) {
+        if (userRepository.existsByUsername(createEditDto.username())) throw new IllegalArgumentException(
+                "User with username=%s already exist".formatted(createEditDto.username())
+        );
+
         return Optional.of(createEditDto)
                 .map(userCreateEditMapper::map).stream()
                 .peek(entity -> entity.setRole(Role.USER)).findFirst()
@@ -74,18 +78,12 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-                .map(user -> new org.springframework.security.core.userdetails.User(
+                .map(user -> new AuthenticatedUser(
+                        user.getId(),
                         user.getUsername(),
                         user.getPassword(),
                         Collections.singleton(user.getRole())
                 ))
                 .orElseThrow(() -> new UsernameNotFoundException("Fail to retrieve user: " + username));
-    }
-
-    public UserReadDto findByUsername(String username) {
-        return Optional.of(username)
-                .flatMap(userRepository::findByUsername)
-                .map(userReadMapper::map)
-                .orElseThrow(EntityNotFoundException::new);
     }
 }

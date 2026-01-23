@@ -14,7 +14,8 @@ public record LocationCreateEditDto(
         @NotBlank
         String address,
 
-        @Min(1)
+        @NotNull
+        @Min(5)
         Integer capacity
 ) {
 }

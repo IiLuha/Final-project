@@ -1,6 +1,7 @@
 package com.itdev.finalproject.dto.createedit;
 
 import com.itdev.finalproject.validation.group.CreateAction;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -12,6 +13,9 @@ public record UserCreateEditDto(
 
         @NotNull(groups = {CreateAction.class})
         @NotBlank
-        String password) {
+        String password,
 
+        @NotNull
+        @Min(0)
+        Integer age) {
 }
