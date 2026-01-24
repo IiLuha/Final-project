@@ -38,5 +38,8 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, UserEntit
                 .filter(StringUtils::hasText)
                 .map(passwordEncoder::encode)
                 .ifPresent(userEntity::setPassword);
+
+        Optional.ofNullable(dto.age())
+                .ifPresent(userEntity::setAge);
     }
 }

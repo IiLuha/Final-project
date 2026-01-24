@@ -1,5 +1,7 @@
 package com.itdev.finalproject.http.rest;
 
+import com.itdev.finalproject.database.entity.Role;
+import com.itdev.finalproject.dto.AuthenticatedUser;
 import com.itdev.finalproject.dto.JwtResponse;
 import com.itdev.finalproject.dto.SignInDto;
 import com.itdev.finalproject.dto.createedit.UserCreateEditDto;
@@ -13,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,22 +54,26 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<JwtResponse>  authentication(
+    public ResponseEntity<JwtResponse> authentication(
             @RequestBody @Valid SignInDto user) {
         var token = jwtService.authenticateUser(user);
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @PostMapping("/register")
-    public UserReadDto  register(
+    public UserReadDto register(
             @RequestBody @Validated({Default.class, CreateAction.class}) UserCreateEditDto user) {
         return userService.create(user);
     }
 
     @PutMapping("/{id}")
-    public UserReadDto update(@PathVariable Long id, @Valid @RequestBody UserCreateEditDto editDto) {
-        return userService.update(id, editDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public UserReadDto update(@PathVariable Long id,
+                              @Valid @RequestBody UserCreateEditDto editDto,
+                              @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+        if (authenticatedUser.getAuthorities().contains(Role.ADMIN) || id.equals(authenticatedUser.getId())) {
+            return userService.update(id, editDto)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        } else throw new AuthorizationDeniedException("Access Denied");
     }
 
     @DeleteMapping("/{id}")

@@ -29,7 +29,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException
     ) throws IOException, ServletException {
         var messageResponse = new ServerErrorDto(
-                "Недостаточно прав доступа",
+                "Insufficient authority",
                 accessDeniedException.getMessage()
         );
 

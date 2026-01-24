@@ -13,8 +13,8 @@ public class UserReadMapper implements Mapper<UserEntity, UserReadDto> {
         return new UserReadDto(
                 object.getId(),
                 object.getUsername(),
-                object.getPassword(),
-                object.getRole()
+                object.getRole(),
+                object.getAge()
         );
     }
 }

@@ -48,15 +48,12 @@ public class LocationController {
 
     @PutMapping("/{id}")
     public LocationReadDto update(@PathVariable Long id, @Valid @RequestBody LocationCreateEditDto editDto) {
-        return locationService.update(id, editDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return locationService.update(id, editDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        if (!locationService.delete(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        locationService.delete(id);
     }
 }

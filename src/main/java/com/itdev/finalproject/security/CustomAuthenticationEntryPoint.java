@@ -29,7 +29,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                          AuthenticationException authException
     ) throws IOException, ServletException {
         var messageResponse = new ServerErrorDto(
-                "Ошибка аутентификации",
+                "Authentication error",
                 authException.getMessage()
         );
 

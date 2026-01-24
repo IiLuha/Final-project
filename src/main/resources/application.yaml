@@ -9,9 +9,11 @@ spring:
       hibernate:
         current_session_context_class: thread
         hbm2ddl:
-          auto: update
+          auto: create-drop
     open-in-view: false
 
 jwt:
   lifetime: 86400000
   secret-key: B44NQVBBEKIAMBKFPQMLZG2FKXA2NY2ZUDOBE5LC5FYN5WZUYJEA
+
+event.stats.cron: "0 */1 * * * *"
