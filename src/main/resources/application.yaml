@@ -1,3 +1,6 @@
+server:
+  port:  8080
+
 spring:
   application.name: Event Manager
   datasource:
@@ -9,7 +12,7 @@ spring:
       hibernate:
         current_session_context_class: thread
         hbm2ddl:
-          auto: create-drop
+          auto: update
     open-in-view: false
 
 jwt:

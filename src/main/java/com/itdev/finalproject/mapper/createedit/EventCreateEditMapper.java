@@ -29,16 +29,17 @@ public class EventCreateEditMapper implements Mapper<EventCreateEditDto, EventEn
         return userEntity;
     }
 
-    private void copy(EventCreateEditDto dto, EventEntity userEntity) {
-        userEntity.setName(dto.name());
-        userEntity.setMaxPlaces(dto.maxPlaces());
-        userEntity.setDate(dto.date());
-        userEntity.setDuration(dto.duration());
-        userEntity.setCost(dto.cost());
-        userEntity.setLocation(
+    private void copy(EventCreateEditDto dto, EventEntity eventEntity) {
+        eventEntity.setName(dto.name());
+        eventEntity.setMaxPlaces(dto.maxPlaces());
+        eventEntity.setOccupiedPlaces(dto.occupiedPlaces());
+        eventEntity.setDate(dto.date());
+        eventEntity.setDuration(dto.duration());
+        eventEntity.setCost(dto.cost());
+        eventEntity.setLocation(
                 locationRepository.findById(dto.locationId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Could not find location with id=" + dto.locationId() + " for event"))
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                "Could not find location with id=" + dto.locationId() + " for event"))
         );
     }
 }
