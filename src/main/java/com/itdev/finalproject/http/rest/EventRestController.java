@@ -4,6 +4,7 @@ import com.itdev.finalproject.dto.AuthenticatedUser;
 import com.itdev.finalproject.dto.ServerErrorDto;
 import com.itdev.finalproject.dto.createedit.EventCreateEditDto;
 import com.itdev.finalproject.dto.filter.EventFilter;
+import com.itdev.finalproject.dto.read.CompactEventReadDto;
 import com.itdev.finalproject.dto.read.EventReadDto;
 import com.itdev.finalproject.service.EventService;
 import com.itdev.finalproject.validation.group.CreateAction;
@@ -28,11 +29,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("api/v1/events")
-public class EventController {
+public class EventRestController {
 
     private final EventService eventService;
 
-    public EventController(EventService eventService) {
+    public EventRestController(EventService eventService) {
         this.eventService = eventService;
     }
 
@@ -51,16 +52,16 @@ public class EventController {
     }
 
     @PostMapping
-    public EventReadDto  create(
+    public CompactEventReadDto create(
             @RequestBody @Validated({Default.class, CreateAction.class}) EventCreateEditDto event,
             @AuthenticationPrincipal AuthenticatedUser owner) {
         return eventService.create(event, owner);
     }
 
     @PutMapping("/{id}")
-    public EventReadDto update(@PathVariable Long id,
-                               @Valid @RequestBody EventCreateEditDto editDto,
-                               @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+    public CompactEventReadDto update(@PathVariable Long id,
+                                      @Valid @RequestBody EventCreateEditDto editDto,
+                                      @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
         return eventService.update(id, editDto, authenticatedUser);
     }
 
@@ -78,16 +79,18 @@ public class EventController {
         Page<EventReadDto> events = eventService.findAllByOwner(owner.getId(), pageable);
         return events.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(events);
     }
+
     @PostMapping("/registrations/{id}")
     public ResponseEntity<?> create(
             @AuthenticationPrincipal AuthenticatedUser visitor,
             @PathVariable("id") Long eventId) {
         return eventService.registerVisitor(visitor.getId(), eventId) ?
                 ResponseEntity.ok().build() : ResponseEntity.badRequest().body(
-                        new ServerErrorDto("Bed request",
-                                "Authenticated user is already registered for the event with id=" + eventId)
+                new ServerErrorDto("Bed request",
+                        "Authenticated user is already registered for the event with id=" + eventId)
         );
     }
+
     @DeleteMapping("/registrations/cancel/{id}")
     public ResponseEntity<?> cancelRegistration(
             @AuthenticationPrincipal AuthenticatedUser visitor,
@@ -98,6 +101,7 @@ public class EventController {
                         "Authenticated user isn't registered for the event with id=" + eventId)
         );
     }
+
     @GetMapping("/registrations/my")
     public ResponseEntity<Page<EventReadDto>> findAllByVisitor(
             @AuthenticationPrincipal AuthenticatedUser visitor,

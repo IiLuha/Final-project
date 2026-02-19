@@ -26,8 +26,6 @@ public interface EventRepository extends JpaRepository<EventEntity, Long>, JpaSp
 
     boolean existsByLocation(LocationEntity location);
 
-    List<EventEntity> findAllByDateBeforeAndStatusIs(LocalDateTime dateBefore, EventStatus status);
-
     @Modifying
     @Query(value =
             "UPDATE event " +

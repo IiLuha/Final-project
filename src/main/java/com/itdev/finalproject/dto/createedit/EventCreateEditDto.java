@@ -22,6 +22,10 @@ public record EventCreateEditDto(
         Integer maxPlaces,
 
         @NotNull
+        @PositiveOrZero
+        Integer occupiedPlaces,
+
+        @NotNull
         @Future
         @DateTimeFormat(pattern = "uuuu-MM-dd'T'HH:mm:ss")
         LocalDateTime date,

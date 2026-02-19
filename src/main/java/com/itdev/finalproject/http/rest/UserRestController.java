@@ -2,11 +2,8 @@ package com.itdev.finalproject.http.rest;
 
 import com.itdev.finalproject.database.entity.Role;
 import com.itdev.finalproject.dto.AuthenticatedUser;
-import com.itdev.finalproject.dto.JwtResponse;
-import com.itdev.finalproject.dto.SignInDto;
 import com.itdev.finalproject.dto.createedit.UserCreateEditDto;
 import com.itdev.finalproject.dto.read.UserReadDto;
-import com.itdev.finalproject.service.JwtAuthenticationService;
 import com.itdev.finalproject.service.UserService;
 import com.itdev.finalproject.validation.group.CreateAction;
 import jakarta.validation.Valid;
@@ -31,14 +28,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("api/v1/users")
-public class UserController {
+public class UserRestController {
 
     private final UserService userService;
-    private final JwtAuthenticationService jwtService;
 
-    public UserController(UserService userService, JwtAuthenticationService jwtService) {
+    public UserRestController(UserService userService) {
         this.userService = userService;
-        this.jwtService = jwtService;
     }
 
     @GetMapping
@@ -51,13 +46,6 @@ public class UserController {
     public UserReadDto findById(@PathVariable("id") Long id) {
         return userService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
-
-    @PostMapping("/auth")
-    public ResponseEntity<JwtResponse> authentication(
-            @RequestBody @Valid SignInDto user) {
-        var token = jwtService.authenticateUser(user);
-        return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @PostMapping("/register")

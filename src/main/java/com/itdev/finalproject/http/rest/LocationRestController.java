@@ -21,11 +21,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("api/v1/locations")
-public class LocationController {
+public class LocationRestController {
 
     private final LocationService locationService;
 
-    public LocationController(LocationService locationService) {
+    public LocationRestController(LocationService locationService) {
         this.locationService = locationService;
     }
 
@@ -42,7 +42,7 @@ public class LocationController {
     }
 
     @PostMapping("/create")
-    public LocationReadDto  create(@RequestBody @Valid LocationCreateEditDto location) {
+    public LocationReadDto create(@RequestBody @Valid LocationCreateEditDto location) {
         return locationService.create(location);
     }
 

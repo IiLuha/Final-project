@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice(basePackages = "com.itdev.finalproject.http.rest")
 public class RestControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-
     // Обработка валидации (@Valid)
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -50,7 +49,7 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ServerErrorDto> illegalArgumentExceptionHandle(IllegalStateException e) {
+    public ResponseEntity<ServerErrorDto> illegalStateExceptionHandle(IllegalStateException e) {
         return ResponseEntity.badRequest()
                 .body(new ServerErrorDto(
                         "Bad request error",
@@ -59,10 +58,19 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ServerErrorDto> illegalArgumentExceptionHandle(EntityNotFoundException e) {
+    public ResponseEntity<ServerErrorDto> entityNotFoundExceptionHandle(EntityNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ServerErrorDto(
                         "Entity Not Found",
+                        e.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ServerErrorDto> exceptionHandle(EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ServerErrorDto(
+                        "ServerError",
                         e.getMessage()
                 ));
     }
